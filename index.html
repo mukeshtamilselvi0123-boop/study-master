@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#5b4bdb">
+<link rel="manifest" href="manifest.json">
+<title>Study Master</title>
+<style>
+:root{--ink:#24213b;--muted:#6d6884;--bg:#f6f4ff;--card:#fff;--purple:#5b4bdb;--line:#e9e5fa}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:linear-gradient(135deg,#5b4bdb,#9875ee);color:white;padding:24px 18px 28px;border-radius:0 0 26px 26px}
+h1{margin:0;font-size:27px}header p{margin:6px 0 0;opacity:.92}.wrap{max-width:760px;margin:auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:17px;margin:13px 0;box-shadow:0 5px 18px #4030800b}
+h2{font-size:18px;margin:0 0 12px}.muted{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
+select,input{width:100%;padding:11px;border:1px solid var(--line);border-radius:11px;background:white;color:var(--ink);font:inherit}
+button{border:0;border-radius:12px;padding:11px 14px;background:var(--purple);color:white;font-weight:650;font:inherit;cursor:pointer}
+button.secondary{background:#eeeaff;color:#4e40bb}button:disabled{opacity:.45}
+.timer{text-align:center;padding:12px 0}.clock{font-size:54px;font-weight:750;letter-spacing:1px;font-variant-numeric:tabular-nums}
+.actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.progress{height:10px;background:#eeeaf8;border-radius:20px;overflow:hidden}.progress>div{height:100%;background:#7b67e8;width:0%}
+.day{display:grid;grid-template-columns:86px 1fr;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}.day:last-child{border:0}
+.day b{color:#5143b7}.subject{display:inline-block;background:#f0edff;padding:5px 9px;border-radius:9px;margin:2px}
+.check{display:flex;align-items:center;gap:9px;margin:9px 0}.check input{width:auto}
+.notice{background:#fff7df;border:1px solid #f2df9e;padding:12px;border-radius:12px;font-size:13px;line-height:1.45}
+@media(max-width:430px){.grid{grid-template-columns:1fr}.clock{font-size:46px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>📚 STUDY MASTER</h1><p>Your study plan, focus timer and daily progress</p></div></header>
+<main class="wrap">
+<section class="card">
+<h2>⏱️ Focus & break timer</h2>
+<div class="grid">
+<div><label for="studyMins">Study minutes</label><select id="studyMins"><option>30</option><option>25</option><option>45</option><option>50</option></select></div>
+<div><label for="breakMins">Break minutes</label><select id="breakMins"><option>5</option><option>10</option><option>15</option></select></div>
+</div>
+<div class="timer"><div class="muted" id="phase">Ready to focus?</div><div class="clock" id="clock">30:00</div><div class="muted" id="timerHint">Choose Start when you're ready.</div>
+<div class="actions"><button id="start">Start</button><button class="secondary" id="pause">Pause</button><button class="secondary" id="reset">Reset</button></div></div>
+</section>
+<section class="card">
+<h2>🗓️ Your weekly timetable</h2>
+<div class="muted">Morning session: 4:00–5:00 AM · Evening session: 7:00–9:00 PM</div>
+<div id="timetable"></div>
+</section>
+<section class="card">
+<h2>🎯 Today's goals</h2>
+<label for="daySelect">Choose day</label><select id="daySelect"></select>
+<div id="goals"></div>
+<div style="margin-top:12px"><div class="progress"><div id="bar"></div></div><p class="muted" id="progressText">0 of 4 goals completed</p></div>
+</section>
+<section class="card">
+<h2>⏰ Wake-up reminder</h2>
+<div class="grid">
+<div><label for="wake">Reminder time</label><input id="wake" type="time" value="04:00"></div>
+<div style="display:flex;align-items:end"><button id="saveWake" style="width:100%">Save reminder</button></div>
+</div>
+<p class="muted" id="wakeStatus">Reminder is saved on this device when you tap Save.</p>
+<p class="notice">Important: this web app cannot reliably ring like an alarm when your phone is locked or the browser is closed. Set a repeating 4:00 AM alarm in your phone's Clock app too. At age 16, aim for 8–10 hours of sleep; studying until 9 PM and waking at 4 AM leaves only 7 hours, so please adjust one of those times rather than regularly cutting sleep.</p>
+</section>
+<section class="card">
+<h2>🌟 Study habits</h2>
+<div class="check"><input type="checkbox" id="habit1"><label for="habit1">Keep my phone away while studying</label></div>
+<div class="check"><input type="checkbox" id="habit2"><label for="habit2">Drink water and take proper breaks</label></div>
+<div class="check"><input type="checkbox" id="habit3"><label for="habit3">Review what I learned today</label></div>
+</section>
+<p class="muted" style="text-align:center">Study Master · Your progress stays in this browser on this device.</p>
+</main>
+<script>
+const plan=[
+["Monday","Tamil","Maths"],["Tuesday","English","Physics"],["Wednesday","Maths","Chemistry"],
+["Thursday","Physics","Tamil"],["Friday","Chemistry","English"],["Saturday","Computer Science","Computer Science"],
+["Sunday","All-subject revision","Mock test & previous questions"]
+];
+const days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const timetable=document.getElementById('timetable');
+plan.forEach(([d,m,e])=>{const row=document.createElement('div');row.className='day';row.innerHTML=`<b>${d}</b><div><span class="subject">4–5 AM: ${m}</span><br><span class="subject">7–9 PM: ${e}</span></div>`;timetable.append(row)});
+const daySelect=document.getElementById('daySelect');
+days.forEach(d=>{let o=document.createElement('option');o.value=d;o.textContent=d;daySelect.append(o)});
+daySelect.value=days[new Date().getDay()];
+const goalNames=["Complete my morning study session","Complete my evening study session","Finish homework / practice questions","Revise today's key points"];
+function loadGoals(){let d=daySelect.value, key='goals-'+new Date().toDateString()+'-'+d;let saved=JSON.parse(localStorage.getItem(key)||'[]');let box=document.getElementById('goals');box.innerHTML='';goalNames.forEach((g,i)=>{let l=document.createElement('label');l.className='check';let c=document.createElement('input');c.type='checkbox';c.checked=!!saved[i];c.addEventListener('change',()=>{saved[i]=c.checked;localStorage.setItem(key,JSON.stringify(saved));updateProgress(saved)});l.append(c,document.createTextNode(g));box.append(l)});updateProgress(saved)}
+function updateProgress(a){let n=a.filter(Boolean).length;document.getElementById('bar').style.width=(n/4*100)+'%';document.getElementById('progressText').textContent=`${n} of 4 goals completed`}
+daySelect.addEventListener('change',loadGoals);loadGoals();
+let remaining=1800, interval=null, mode='study', running=false;
+const clock=document.getElementById('clock'),phase=document.getElementById('phase'),hint=document.getElementById('timerHint');
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function render(){clock.textContent=fmt(remaining);phase.textContent=mode==='study'?'📖 Study time':'☕ Break time';hint.textContent=running?'Timer is running.': 'Paused / ready.'}
+function duration(m){return Number(document.getElementById(m).value)*60}
+function stop(){clearInterval(interval);interval=null;running=false}
+function tick(){remaining--;if(remaining<=0){stop();if(mode==='study'){mode='break';remaining=duration('breakMins')}else{mode='study';remaining=duration('studyMins')}render();hint.textContent='Session finished! Start the next timer when ready.';if('Notification'in window&&Notification.permission==='granted')new Notification(mode==='break'?'Break finished':'Study session finished');try{navigator.vibrate?.([200,100,200])}catch(e){}return}render()}
+document.getElementById('start').onclick=()=>{if(running)return;if(remaining<=0)remaining=duration(mode==='study'?'studyMins':'breakMins');if('Notification'in window&&Notification.permission==='default')Notification.requestPermission();running=true;interval=setInterval(tick,1000);render()};
+document.getElementById('pause').onclick=()=>{stop();render()};
+document.getElementById('reset').onclick=()=>{stop();mode='study';remaining=duration('studyMins');render()};
+['studyMins','breakMins'].forEach(id=>document.getElementById(id).onchange=()=>{if(!running){mode='study';remaining=duration('studyMins');render()}});
+render();
+document.getElementById('saveWake').onclick=()=>{let t=document.getElementById('wake').value;localStorage.setItem('wakeReminder',t);document.getElementById('wakeStatus').textContent=`Reminder preference saved as ${t}. For a dependable alarm, also set this time in your phone's Clock app.`};
+if(localStorage.getItem('wakeReminder'))document.getElementById('wake').value=localStorage.getItem('wakeReminder');
+if('serviceWorker'in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>

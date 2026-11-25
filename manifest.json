@@ -1,0 +1,9 @@
+{
+  "name": "Study Master",
+  "short_name": "Study Master",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f6f4ff",
+  "theme_color": "#5b4bdb",
+  "description": "A free study planner with focus and break timers."
+}
