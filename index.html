@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,97 +8,420 @@
 <link rel="manifest" href="manifest.json">
 <title>Study Master</title>
 <style>
-:root{--ink:#24213b;--muted:#6d6884;--bg:#f6f4ff;--card:#fff;--purple:#5b4bdb;--line:#e9e5fa}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px system-ui,-apple-system,Segoe UI,sans-serif}
-header{background:linear-gradient(135deg,#5b4bdb,#9875ee);color:white;padding:24px 18px 28px;border-radius:0 0 26px 26px}
-h1{margin:0;font-size:27px}header p{margin:6px 0 0;opacity:.92}.wrap{max-width:760px;margin:auto;padding:16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:17px;margin:13px 0;box-shadow:0 5px 18px #4030800b}
-h2{font-size:18px;margin:0 0 12px}.muted{color:var(--muted);font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+:root {
+  --ink:#24213b;--muted:#6d6884;--bg:#f6f4ff;
+  --card:#fff;--purple:#5b4bdb;--line:#e9e5fa;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+font:16px system-ui,sans-serif}
+header{background:linear-gradient(135deg,#5b4bdb,#9875ee);
+color:white;padding:25px 18px;border-radius:0 0 26px 26px}
+h1{margin:0;font-size:27px}
+.wrap{max-width:760px;margin:auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);
+border-radius:18px;padding:17px;margin:13px 0;
+box-shadow:0 5px 18px #4030800b}
+h2{font-size:19px;margin:0 0 14px}
 label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
-select,input{width:100%;padding:11px;border:1px solid var(--line);border-radius:11px;background:white;color:var(--ink);font:inherit}
-button{border:0;border-radius:12px;padding:11px 14px;background:var(--purple);color:white;font-weight:650;font:inherit;cursor:pointer}
-button.secondary{background:#eeeaff;color:#4e40bb}button:disabled{opacity:.45}
-.timer{text-align:center;padding:12px 0}.clock{font-size:54px;font-weight:750;letter-spacing:1px;font-variant-numeric:tabular-nums}
-.actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
-.progress{height:10px;background:#eeeaf8;border-radius:20px;overflow:hidden}.progress>div{height:100%;background:#7b67e8;width:0%}
-.day{display:grid;grid-template-columns:86px 1fr;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}.day:last-child{border:0}
-.day b{color:#5143b7}.subject{display:inline-block;background:#f0edff;padding:5px 9px;border-radius:9px;margin:2px}
-.check{display:flex;align-items:center;gap:9px;margin:9px 0}.check input{width:auto}
-.notice{background:#fff7df;border:1px solid #f2df9e;padding:12px;border-radius:12px;font-size:13px;line-height:1.45}
-@media(max-width:430px){.grid{grid-template-columns:1fr}.clock{font-size:46px}}
+input,select{width:100%;padding:11px;border:1px solid var(--line);
+border-radius:11px;background:white;color:var(--ink);
+font:inherit;margin-bottom:10px}
+button{border:0;border-radius:11px;padding:11px 14px;
+background:var(--purple);color:white;font:inherit;
+font-weight:650;cursor:pointer;margin:3px}
+button.secondary{background:#eeeaff;color:#4e40bb}
+button.danger{background:#fff0f0;color:#b42318}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.muted{color:var(--muted);font-size:13px}
+.day{padding:10px 0;border-bottom:1px solid var(--line)}
+.session{background:#f0edff;border-radius:12px;padding:11px;
+margin:7px 0;display:flex;justify-content:space-between;
+align-items:center;gap:8px;flex-wrap:wrap}
+.session strong{display:block}
+.session small{color:var(--muted)}
+.timer{text-align:center;padding:12px 0}
+.clock{font-size:52px;font-weight:750;font-variant-numeric:tabular-nums}
+.actions{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
+.progress{height:10px;background:#eeeaf8;border-radius:20px;overflow:hidden}
+.progress div{height:100%;background:#7b67e8;width:0%}
+.check{display:flex;align-items:center;gap:9px;margin:9px 0}
+.check input{width:auto;margin:0}
+.notice{background:#fff7df;padding:12px;border-radius:12px;
+font-size:13px;line-height:1.5}
+@media(max-width:430px){.grid{grid-template-columns:1fr}.clock{font-size:44px}}
 </style>
 </head>
 <body>
-<header><div class="wrap"><h1>📚 STUDY MASTER</h1><p>Your study plan, focus timer and daily progress</p></div></header>
-<main class="wrap">
-<section class="card">
-<h2>⏱️ Focus & break timer</h2>
-<div class="grid">
-<div><label for="studyMins">Study minutes</label><select id="studyMins"><option>30</option><option>25</option><option>45</option><option>50</option></select></div>
-<div><label for="breakMins">Break minutes</label><select id="breakMins"><option>5</option><option>10</option><option>15</option></select></div>
+<header>
+<div class="wrap">
+<h1>📚 STUDY MASTER</h1>
+<p>Your personal smart study planner</p>
 </div>
-<div class="timer"><div class="muted" id="phase">Ready to focus?</div><div class="clock" id="clock">30:00</div><div class="muted" id="timerHint">Choose Start when you're ready.</div>
-<div class="actions"><button id="start">Start</button><button class="secondary" id="pause">Pause</button><button class="secondary" id="reset">Reset</button></div></div>
-</section>
+</header>
+
+<main class="wrap">
+
 <section class="card">
-<h2>🗓️ Your weekly timetable</h2>
-<div class="muted">Morning session: 4:00–5:00 AM · Evening session: 7:00–9:00 PM</div>
-<div id="timetable"></div>
+<h2>📅 My Smart Timetable</h2>
+<p class="muted">You control your schedule. Add, edit and delete your sessions whenever you want.</p>
+
+<label for="day">Choose day</label>
+<select id="day">
+<option>Monday</option><option>Tuesday</option>
+<option>Wednesday</option><option>Thursday</option>
+<option>Friday</option><option>Saturday</option><option>Sunday</option>
+</select>
+
+<div id="schedule"></div>
+
+<h3>Add or edit a session</h3>
+<input type="hidden" id="editId">
+<label for="subject">Subject or activity</label>
+<input id="subject" placeholder="Example: Mathematics">
+
+<div class="grid">
+<div>
+<label for="start">Start time</label>
+<input id="start" type="time" value="16:00">
+</div>
+<div>
+<label for="end">End time</label>
+<input id="end" type="time" value="17:00">
+</div>
+</div>
+<button id="saveSession">Save session</button>
+<button class="secondary" id="cancelEdit">Cancel edit</button>
+
+<hr style="border:0;border-top:1px solid var(--line);margin:20px 0">
+
+<h3>🤖 Automatic study planner</h3>
+<p class="muted">Choose your free-time window and subjects. The planner will suggest sessions without overlapping your existing timetable.</p>
+
+<label for="subjects">Subjects (separate with commas)</label>
+<input id="subjects" placeholder="Maths, Science, English">
+
+<div class="grid">
+<div>
+<label for="autoStart">Free time starts</label>
+<input id="autoStart" type="time" value="17:00">
+</div>
+<div>
+<label for="autoEnd">Free time ends</label>
+<input id="autoEnd" type="time" value="20:00">
+</div>
+</div>
+
+<label for="sessionLength">Length of each session</label>
+<select id="sessionLength">
+<option value="25">25 minutes</option>
+<option value="30" selected>30 minutes</option>
+<option value="45">45 minutes</option>
+<option value="60">60 minutes</option>
+</select>
+
+<button id="autoPlan">✨ Suggest study sessions</button>
+<p class="muted" id="autoStatus" aria-live="polite"></p>
 </section>
+
+<section class="card">
+<h2>⏱️ Focus and break timer</h2>
+<div class="grid">
+<div>
+<label for="studyMins">Study minutes</label>
+<select id="studyMins">
+<option>25</option><option selected>30</option>
+<option>45</option><option>50</option>
+</select>
+</div>
+<div>
+<label for="breakMins">Break minutes</label>
+<select id="breakMins">
+<option>5</option><option>10</option><option>15</option>
+</select>
+</div>
+</div>
+<div class="timer">
+<div class="muted" id="phase">Ready to focus?</div>
+<div class="clock" id="clock">30:00</div>
+<p class="muted" id="timerHint">Choose Start when ready.</p>
+<div class="actions">
+<button id="startTimer">Start</button>
+<button class="secondary" id="pauseTimer">Pause</button>
+<button class="secondary" id="resetTimer">Reset</button>
+</div>
+</div>
+</section>
+
 <section class="card">
 <h2>🎯 Today's goals</h2>
-<label for="daySelect">Choose day</label><select id="daySelect"></select>
+<label for="goalDay">Choose day</label>
+<select id="goalDay">
+<option>Monday</option><option>Tuesday</option>
+<option>Wednesday</option><option>Thursday</option>
+<option>Friday</option><option>Saturday</option><option>Sunday</option>
+</select>
 <div id="goals"></div>
-<div style="margin-top:12px"><div class="progress"><div id="bar"></div></div><p class="muted" id="progressText">0 of 4 goals completed</p></div>
+<div class="progress"><div id="bar"></div></div>
+<p class="muted" id="progressText">0 goals completed</p>
 </section>
+
 <section class="card">
 <h2>⏰ Wake-up reminder</h2>
-<div class="grid">
-<div><label for="wake">Reminder time</label><input id="wake" type="time" value="04:00"></div>
-<div style="display:flex;align-items:end"><button id="saveWake" style="width:100%">Save reminder</button></div>
-</div>
-<p class="muted" id="wakeStatus">Reminder is saved on this device when you tap Save.</p>
-<p class="notice">Important: this web app cannot reliably ring like an alarm when your phone is locked or the browser is closed. Set a repeating 4:00 AM alarm in your phone's Clock app too. At age 16, aim for 8–10 hours of sleep; studying until 9 PM and waking at 4 AM leaves only 7 hours, so please adjust one of those times rather than regularly cutting sleep.</p>
+<label for="wake">Reminder time</label>
+<input id="wake" type="time" value="04:00">
+<button id="saveWake">Save reminder</button>
+<p class="muted" id="wakeStatus">Reminder preference is saved on this device.</p>
+<p class="notice">For a dependable alarm when your phone is locked, also set an alarm in your phone's Clock app.</p>
 </section>
+
 <section class="card">
 <h2>🌟 Study habits</h2>
-<div class="check"><input type="checkbox" id="habit1"><label for="habit1">Keep my phone away while studying</label></div>
-<div class="check"><input type="checkbox" id="habit2"><label for="habit2">Drink water and take proper breaks</label></div>
-<div class="check"><input type="checkbox" id="habit3"><label for="habit3">Review what I learned today</label></div>
+<div class="check"><input type="checkbox" id="habit1">
+<label for="habit1">Keep my phone away while studying</label></div>
+<div class="check"><input type="checkbox" id="habit2">
+<label for="habit2">Drink water and take proper breaks</label></div>
+<div class="check"><input type="checkbox" id="habit3">
+<label for="habit3">Review what I learned today</label></div>
 </section>
-<p class="muted" style="text-align:center">Study Master · Your progress stays in this browser on this device.</p>
+
+<p class="muted" style="text-align:center">
+Study Master · Your data is saved in this browser on this device.
+</p>
 </main>
+
 <script>
-const plan=[
-["Monday","Tamil","Maths"],["Tuesday","English","Physics"],["Wednesday","Maths","Chemistry"],
-["Thursday","Physics","Tamil"],["Friday","Chemistry","English"],["Saturday","Computer Science","Computer Science"],
-["Sunday","All-subject revision","Mock test & previous questions"]
+const days=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const $=id=>document.getElementById(id);
+const read=(key,fallback)=>{
+ try{return JSON.parse(localStorage.getItem(key))??fallback}
+ catch{return fallback}
+};
+const write=(key,value)=>localStorage.setItem(key,JSON.stringify(value));
+
+let sessions=read("smSessions",[]);
+let nextId=1;
+sessions.forEach(s=>nextId=Math.max(nextId,Number(s.id)+1));
+
+function minutes(t){
+ const [h,m]=t.split(":").map(Number);
+ return h*60+m;
+}
+function timeText(t){
+ const [h,m]=t.split(":").map(Number);
+ return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+}
+function renderSchedule(){
+ const day=$("day").value;
+ const box=$("schedule");
+ box.replaceChildren();
+ const list=sessions.filter(s=>s.day===day)
+ .sort((a,b)=>a.start.localeCompare(b.start));
+
+ if(!list.length){
+  const p=document.createElement("p");
+  p.className="muted";p.textContent="No sessions yet. Add your first study session below.";
+  box.append(p);return;
+ }
+ list.forEach(s=>{
+  const row=document.createElement("div");
+  row.className="session";
+  const info=document.createElement("div");
+  const name=document.createElement("strong");
+  name.textContent=s.subject;
+  const time=document.createElement("small");
+  time.textContent=`${s.start} – ${s.end}${s.automatic?" · Suggested": " · Fixed"}`;
+  info.append(name,time);
+  const actions=document.createElement("div");
+  const edit=document.createElement("button");
+  edit.className="secondary";edit.textContent="Edit";
+  edit.onclick=()=>editSession(s.id);
+  const del=document.createElement("button");
+  del.className="danger";del.textContent="Delete";
+  del.onclick=()=>deleteSession(s.id);
+  actions.append(edit,del);row.append(info,actions);box.append(row);
+ });
+}
+function overlaps(day,start,end,ignoreId){
+ return sessions.some(s=>s.day===day&&s.id!==ignoreId&&
+ minutes(start)<minutes(s.end)&&minutes(end)>minutes(s.start));
+}
+function clearForm(){
+ $("editId").value="";
+ $("subject").value="";
+ $("start").value="16:00";
+ $("end").value="17:00";
+}
+function editSession(id){
+ const s=sessions.find(x=>x.id===id);if(!s)return;
+ $("editId").value=s.id;
+ $("subject").value=s.subject;
+ $("start").value=s.start;
+ $("end").value=s.end;
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function deleteSession(id){
+ if(!confirm("Delete this study session?"))return;
+ sessions=sessions.filter(s=>s.id!==id);
+ write("smSessions",sessions);renderSchedule();
+}
+$("saveSession").onclick=()=>{
+ const day=$("day").value;
+ const subject=$("subject").value.trim();
+ const start=$("start").value,end=$("end").value;
+ const id=$("editId").value?Number($("editId").value):null;
+ if(!subject||!start||!end){alert("Enter a subject and both times.");return}
+ if(minutes(end)<=minutes(start)){alert("End time must be after start time.");return}
+ if(overlaps(day,start,end,id)){alert("This time overlaps another session. Choose a different time.");return}
+ if(id){
+  const s=sessions.find(x=>x.id===id);
+  if(s)Object.assign(s,{day,subject,start,end,automatic:false});
+ }else{
+  sessions.push({id:nextId++,day,subject,start,end,automatic:false});
+ }
+ write("smSessions",sessions);clearForm();renderSchedule();
+};
+$("cancelEdit").onclick=clearForm;
+$("day").onchange=renderSchedule;
+
+$("autoPlan").onclick=()=>{
+ const day=$("day").value;
+ const subjects=$("subjects").value.split(",").map(x=>x.trim()).filter(Boolean);
+ const start=$("autoStart").value,end=$("autoEnd").value;
+ const length=Number($("sessionLength").value);
+ if(!subjects.length){$("autoStatus").textContent="Enter at least one subject.";return}
+ if(!start||!end||minutes(end)<=minutes(start)){
+  $("autoStatus").textContent="Choose a valid free-time window.";return;
+ }
+ let cursor=minutes(start),finish=minutes(end),added=0;
+ const busy=sessions.filter(s=>s.day===day)
+ .map(s=>({start:minutes(s.start),end:minutes(s.end)}))
+ .sort((a,b)=>a.start-b.start);
+ let subjectIndex=0;
+ while(cursor+length<=finish){
+  const conflict=busy.find(b=>cursor<b.end&&cursor+length>b.start);
+  if(conflict){cursor=conflict.end;continue}
+  const hh=Math.floor(cursor/60),mm=cursor%60;
+  const endMin=cursor+length;
+  const eh=Math.floor(endMin/60),em=endMin%60;
+  const fmt=n=>String(n).padStart(2,"0");
+  sessions.push({
+   id:nextId++,day,subject:subjects[subjectIndex%subjects.length],
+   start:`${fmt(hh)}:${fmt(mm)}`,
+   end:`${fmt(eh)}:${fmt(em)}`,
+   automatic:true
+  });
+  busy.push({start:cursor,end:endMin});
+  busy.sort((a,b)=>a.start-b.start);
+  subjectIndex++;added++;cursor=endMin+5;
+ }
+ write("smSessions",sessions);renderSchedule();
+ $("autoStatus").textContent=added?
+ `${added} suggested sessions added. You can edit or delete any of them.`:
+ "No free slots fit your selected session length.";
+};
+
+const goalNames=[
+ "Complete my study session",
+ "Finish homework or practice questions",
+ "Revise today's key points",
+ "Prepare for the next class"
 ];
-const days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-const timetable=document.getElementById('timetable');
-plan.forEach(([d,m,e])=>{const row=document.createElement('div');row.className='day';row.innerHTML=`<b>${d}</b><div><span class="subject">4–5 AM: ${m}</span><br><span class="subject">7–9 PM: ${e}</span></div>`;timetable.append(row)});
-const daySelect=document.getElementById('daySelect');
-days.forEach(d=>{let o=document.createElement('option');o.value=d;o.textContent=d;daySelect.append(o)});
-daySelect.value=days[new Date().getDay()];
-const goalNames=["Complete my morning study session","Complete my evening study session","Finish homework / practice questions","Revise today's key points"];
-function loadGoals(){let d=daySelect.value, key='goals-'+new Date().toDateString()+'-'+d;let saved=JSON.parse(localStorage.getItem(key)||'[]');let box=document.getElementById('goals');box.innerHTML='';goalNames.forEach((g,i)=>{let l=document.createElement('label');l.className='check';let c=document.createElement('input');c.type='checkbox';c.checked=!!saved[i];c.addEventListener('change',()=>{saved[i]=c.checked;localStorage.setItem(key,JSON.stringify(saved));updateProgress(saved)});l.append(c,document.createTextNode(g));box.append(l)});updateProgress(saved)}
-function updateProgress(a){let n=a.filter(Boolean).length;document.getElementById('bar').style.width=(n/4*100)+'%';document.getElementById('progressText').textContent=`${n} of 4 goals completed`}
-daySelect.addEventListener('change',loadGoals);loadGoals();
-let remaining=1800, interval=null, mode='study', running=false;
-const clock=document.getElementById('clock'),phase=document.getElementById('phase'),hint=document.getElementById('timerHint');
-function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
-function render(){clock.textContent=fmt(remaining);phase.textContent=mode==='study'?'📖 Study time':'☕ Break time';hint.textContent=running?'Timer is running.': 'Paused / ready.'}
-function duration(m){return Number(document.getElementById(m).value)*60}
-function stop(){clearInterval(interval);interval=null;running=false}
-function tick(){remaining--;if(remaining<=0){stop();if(mode==='study'){mode='break';remaining=duration('breakMins')}else{mode='study';remaining=duration('studyMins')}render();hint.textContent='Session finished! Start the next timer when ready.';if('Notification'in window&&Notification.permission==='granted')new Notification(mode==='break'?'Break finished':'Study session finished');try{navigator.vibrate?.([200,100,200])}catch(e){}return}render()}
-document.getElementById('start').onclick=()=>{if(running)return;if(remaining<=0)remaining=duration(mode==='study'?'studyMins':'breakMins');if('Notification'in window&&Notification.permission==='default')Notification.requestPermission();running=true;interval=setInterval(tick,1000);render()};
-document.getElementById('pause').onclick=()=>{stop();render()};
-document.getElementById('reset').onclick=()=>{stop();mode='study';remaining=duration('studyMins');render()};
-['studyMins','breakMins'].forEach(id=>document.getElementById(id).onchange=()=>{if(!running){mode='study';remaining=duration('studyMins');render()}});
-render();
-document.getElementById('saveWake').onclick=()=>{let t=document.getElementById('wake').value;localStorage.setItem('wakeReminder',t);document.getElementById('wakeStatus').textContent=`Reminder preference saved as ${t}. For a dependable alarm, also set this time in your phone's Clock app.`};
-if(localStorage.getItem('wakeReminder'))document.getElementById('wake').value=localStorage.getItem('wakeReminder');
-if('serviceWorker'in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+function goalKey(){
+ return "smGoals-"+new Date().toDateString()+"-"+$("goalDay").value;
+}
+function renderGoals(){
+ const saved=read(goalKey(),[]);
+ const box=$("goals");box.replaceChildren();
+ goalNames.forEach((name,i)=>{
+  const label=document.createElement("label");
+  label.className="check";
+  const input=document.createElement("input");
+  input.type="checkbox";input.checked=!!saved[i];
+  input.onchange=()=>{
+   saved[i]=input.checked;write(goalKey(),saved);updateGoals(saved);
+  };
+  label.append(input,document.createTextNode(name));box.append(label);
+ });
+ updateGoals(saved);
+}
+function updateGoals(saved){
+ const count=saved.filter(Boolean).length;
+ $("bar").style.width=(count/goalNames.length*100)+"%";
+ $("progressText").textContent=`${count} of ${goalNames.length} goals completed`;
+}
+$("goalDay").onchange=renderGoals;
+const weekday=days[(new Date().getDay()+6)%7];
+$("day").value=weekday;$("goalDay").value=weekday;
+renderSchedule();renderGoals();
+
+let remaining=Number($("studyMins").value)*60;
+let mode="study",running=false,interval=null;
+function duration(){
+ return Number($(mode==="study"?"studyMins":"breakMins").value)*60;
+}
+function format(seconds){
+ return String(Math.floor(seconds/60)).padStart(2,"0")+":"+
+ String(seconds%60).padStart(2,"0");
+}
+function renderTimer(){
+ $("clock").textContent=format(remaining);
+ $("phase").textContent=mode==="study"?"📖 Study time":"☕ Break time";
+ $("timerHint").textContent=running?"Timer is running.":"Paused or ready.";
+}
+function stopTimer(){
+ clearInterval(interval);interval=null;running=false;
+}
+function tick(){
+ remaining--;
+ if(remaining<=0){
+  stopTimer();
+  if(mode==="study"){mode="break";remaining=duration()}
+  else{mode="study";remaining=duration()}
+  renderTimer();
+  $("timerHint").textContent="Session finished! Start the next timer when ready.";
+  if("Notification"in window&&Notification.permission==="granted"){
+   new Notification(mode==="break"?"Break time":"Study time");
+  }
+  try{navigator.vibrate?.([200,100,200])}catch(e){}
+  return;
+ }
+ renderTimer();
+}
+$("startTimer").onclick=()=>{
+ if(running)return;
+ if(remaining<=0)remaining=duration();
+ if("Notification"in window&&Notification.permission==="default")
+  Notification.requestPermission();
+ running=true;interval=setInterval(tick,1000);renderTimer();
+};
+$("pauseTimer").onclick=()=>{stopTimer();renderTimer()};
+$("resetTimer").onclick=()=>{
+ stopTimer();mode="study";remaining=duration();renderTimer();
+};
+["studyMins","breakMins"].forEach(id=>{
+ $(id).onchange=()=>{
+  if(!running){mode="study";remaining=duration();renderTimer()}
+ };
+});
+renderTimer();
+
+$("saveWake").onclick=()=>{
+ const t=$("wake").value;
+ localStorage.setItem("wakeReminder",t);
+ $("wakeStatus").textContent=`Reminder preference saved as ${t}. Set a phone alarm too.`;
+};
+if(localStorage.getItem("wakeReminder"))
+ $("wake").value=localStorage.getItem("wakeReminder");
+
+["habit1","habit2","habit3"].forEach(id=>{
+ $(id).checked=localStorage.getItem("sm-"+id)==="true";
+ $(id).onchange=()=>localStorage.setItem("sm-"+id,$(id).checked);
+});
+
+if("serviceWorker"in navigator&&location.protocol.startsWith("http")){
+ navigator.serviceWorker.register("./sw.js").catch(()=>{});
+}
 </script>
-</body></html>
+</body>
+</html>
