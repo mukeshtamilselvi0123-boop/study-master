@@ -63,6 +63,34 @@ font-size:13px;line-height:1.5}
 <main class="wrap">
 
 <section class="card">
+  <h2>📝 Homework & Assignment Tracker</h2>
+
+  <input type="hidden" id="hwEditId">
+
+  <label>Subject</label>
+  <input id="hwSubject" placeholder="Mathematics">
+
+  <label>Homework description</label>
+  <textarea id="hwDescription" placeholder="What homework do you need to complete?"></textarea>
+
+  <label>Due date</label>
+  <input id="hwDate" type="date">
+
+  <label>Priority</label>
+  <select id="hwPriority">
+    <option>Normal</option>
+    <option>High</option>
+    <option>Urgent</option>
+  </select>
+
+  <button id="hwSave">Save Homework</button>
+  <button class="secondary" id="hwCancel">Cancel</button>
+
+  <h3>My Assignments</h3>
+  <div id="hwList"></div>
+</section>
+
+<section class="card">
 <h2>📅 My Smart Timetable</h2>
 <p class="muted">You control your schedule. Add, edit and delete your sessions whenever you want.</p>
 
