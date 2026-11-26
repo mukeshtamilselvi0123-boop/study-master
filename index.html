@@ -349,6 +349,130 @@ $("autoPlan").onclick=()=>{
  "No free slots fit your selected session length.";
 };
 
+let homework = read("smHomework", []);
+
+function renderHomework() {
+  const box = $("hwList");
+  box.replaceChildren();
+
+  if (!homework.length) {
+    box.textContent = "No homework added yet.";
+    return;
+  }
+
+  homework.forEach(task => {
+    const item = document.createElement("div");
+    item.className = "session";
+
+    const info = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = task.subject;
+
+    const details = document.createElement("small");
+    details.textContent =
+      task.description + " | Due: " + task.date +
+      " | " + task.priority;
+
+    const status = document.createElement("small");
+    status.textContent = task.done ? "Completed ✅" : "Pending";
+
+    info.append(title, details, status);
+
+    const actions = document.createElement("div");
+
+    const done = document.createElement("button");
+    done.className = "secondary";
+    done.textContent = task.done ? "Undo" : "Complete";
+
+    done.onclick = () => {
+      task.done = !task.done;
+      saveHomework();
+    };
+
+    const edit = document.createElement("button");
+    edit.className = "secondary";
+    edit.textContent = "Edit";
+
+    edit.onclick = () => {
+      $("hwEditId").value = task.id;
+      $("hwSubject").value = task.subject;
+      $("hwDescription").value = task.description;
+      $("hwDate").value = task.date;
+      $("hwPriority").value = task.priority;
+    };
+
+    const del = document.createElement("button");
+    del.className = "danger";
+    del.textContent = "Delete";
+
+    del.onclick = () => {
+      if (confirm("Delete this homework?")) {
+        homework = homework.filter(x => x.id !== task.id);
+        saveHomework();
+      }
+    };
+
+    actions.append(done, edit, del);
+    item.append(info, actions);
+    box.append(item);
+  });
+}
+
+function saveHomework() {
+  write("smHomework", homework);
+  renderHomework();
+}
+
+$("hwSave").onclick = () => {
+  const subject = $("hwSubject").value.trim();
+  const description = $("hwDescription").value.trim();
+  const date = $("hwDate").value;
+  const priority = $("hwPriority").value;
+  const editId = $("hwEditId").value;
+
+  if (!subject || !description || !date) {
+    alert("Please fill in all homework details.");
+    return;
+  }
+
+  if (editId) {
+    const task = homework.find(x => x.id === Number(editId));
+
+    if (task) {
+      Object.assign(task, {
+        subject, description, date, priority
+      });
+    }
+  } else {
+    homework.push({
+      id: Date.now(),
+      subject,
+      description,
+      date,
+      priority,
+      done: false
+    });
+  }
+
+  $("hwEditId").value = "";
+  $("hwSubject").value = "";
+  $("hwDescription").value = "";
+  $("hwDate").value = "";
+  $("hwPriority").value = "Normal";
+
+  saveHomework();
+};
+
+$("hwCancel").onclick = () => {
+  $("hwEditId").value = "";
+  $("hwSubject").value = "";
+  $("hwDescription").value = "";
+  $("hwDate").value = "";
+  $("hwPriority").value = "Normal";
+};
+
+renderHomework();
+
 const goalNames=[
  "Complete my study session",
  "Finish homework or practice questions",
