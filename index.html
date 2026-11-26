@@ -1,579 +1,145 @@
-
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#5b4bdb">
-<link rel="manifest" href="manifest.json">
 <title>Study Master</title>
 <style>
-:root {
-  --ink:#24213b;--muted:#6d6884;--bg:#f6f4ff;
-  --card:#fff;--purple:#5b4bdb;--line:#e9e5fa;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);
-font:16px system-ui,sans-serif}
-header{background:linear-gradient(135deg,#5b4bdb,#9875ee);
-color:white;padding:25px 18px;border-radius:0 0 26px 26px}
-h1{margin:0;font-size:27px}
-.wrap{max-width:760px;margin:auto;padding:16px}
-.card{background:var(--card);border:1px solid var(--line);
-border-radius:18px;padding:17px;margin:13px 0;
-box-shadow:0 5px 18px #4030800b}
-h2{font-size:19px;margin:0 0 14px}
-label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
-input,select{width:100%;padding:11px;border:1px solid var(--line);
-border-radius:11px;background:white;color:var(--ink);
-font:inherit;margin-bottom:10px}
-button{border:0;border-radius:11px;padding:11px 14px;
-background:var(--purple);color:white;font:inherit;
-font-weight:650;cursor:pointer;margin:3px}
-button.secondary{background:#eeeaff;color:#4e40bb}
-button.danger{background:#fff0f0;color:#b42318}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.muted{color:var(--muted);font-size:13px}
-.day{padding:10px 0;border-bottom:1px solid var(--line)}
-.session{background:#f0edff;border-radius:12px;padding:11px;
-margin:7px 0;display:flex;justify-content:space-between;
-align-items:center;gap:8px;flex-wrap:wrap}
-.session strong{display:block}
-.session small{color:var(--muted)}
-.timer{text-align:center;padding:12px 0}
-.clock{font-size:52px;font-weight:750;font-variant-numeric:tabular-nums}
-.actions{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
-.progress{height:10px;background:#eeeaf8;border-radius:20px;overflow:hidden}
-.progress div{height:100%;background:#7b67e8;width:0%}
-.check{display:flex;align-items:center;gap:9px;margin:9px 0}
-.check input{width:auto;margin:0}
-.notice{background:#fff7df;padding:12px;border-radius:12px;
-font-size:13px;line-height:1.5}
-@media(max-width:430px){.grid{grid-template-columns:1fr}.clock{font-size:44px}}
+:root{--ink:#24213b;--muted:#6d6884;--bg:#f6f4ff;--card:#fff;--purple:#5b4bdb;--line:#e9e5fa;--soft:#f0edff;--good:#16834a;--danger:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px system-ui,sans-serif;transition:background .2s,color .2s}
+body.dark{--ink:#f1efff;--muted:#b7b1d0;--bg:#171528;--card:#24213a;--purple:#9a8cff;--line:#403b5d;--soft:#332e50;--good:#75d69b;--danger:#ff9292}
+header{background:linear-gradient(135deg,#5b4bdb,#9875ee);color:white;padding:22px 18px;border-radius:0 0 26px 26px}
+h1{margin:0;font-size:27px}header p{margin:6px 0 0}.wrap{max-width:850px;margin:auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:17px;margin:13px 0;box-shadow:0 5px 18px #4030800b}
+h2{font-size:19px;margin:0 0 14px}h3{font-size:16px;margin:16px 0 9px}
+label{display:block;font-size:13px;color:var(--muted);margin:8px 0 5px}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:11px;background:var(--card);color:var(--ink);font:inherit;margin-bottom:8px}
+textarea{min-height:75px;resize:vertical}button{border:0;border-radius:11px;padding:10px 13px;background:var(--purple);color:white;font:inherit;font-weight:650;cursor:pointer;margin:3px}
+button.secondary{background:var(--soft);color:var(--ink)}button.danger{background:#fff0f0;color:#b42318}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.muted{color:var(--muted);font-size:13px}
+.session,.item{background:var(--soft);border-radius:12px;padding:11px;margin:8px 0;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.session strong,.item strong{display:block}.session small,.item small{display:block;color:var(--muted)}
+.timer{text-align:center;padding:12px 0}.clock{font-size:48px;font-weight:750;font-variant-numeric:tabular-nums}.actions{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
+.progress{height:10px;background:var(--line);border-radius:20px;overflow:hidden}.progress div{height:100%;background:#7b67e8;width:0%}
+.check{display:flex;align-items:center;gap:9px;margin:9px 0}.check input{width:auto;margin:0}
+.notice{background:#fff7df;color:#57451b;padding:12px;border-radius:12px;font-size:13px;line-height:1.5}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px}.tabs a{white-space:nowrap;text-decoration:none;background:var(--soft);color:var(--ink);padding:8px 11px;border-radius:10px;font-size:13px}
+.stat{background:var(--soft);padding:12px;border-radius:12px;text-align:center}.stat b{font-size:24px;display:block}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.calday{background:var(--soft);padding:8px 2px;text-align:center;border-radius:9px;min-height:48px;font-size:12px}.calday.today{outline:2px solid var(--purple)}.calday.has{background:#ded8ff;color:#332779}
+hr{border:0;border-top:1px solid var(--line);margin:18px 0}
+@media(max-width:480px){.grid{grid-template-columns:1fr}.clock{font-size:42px}.wrap{padding:12px}}
 </style>
 </head>
 <body>
-<header>
-<div class="wrap">
-<h1>📚 STUDY MASTER</h1>
-<p>Your personal smart study planner</p>
-</div>
-</header>
-
+<header><div class="wrap"><h1>📚 STUDY MASTER</h1><p>Your personal study planner</p></div></header>
 <main class="wrap">
+<nav class="tabs">
+<a href="#timetable">Timetable</a><a href="#homework">Homework</a><a href="#calendar">Calendar</a><a href="#exams">Exams</a><a href="#revision">Revision</a><a href="#grades">Grades</a><a href="#stats">Stats</a><a href="#more">More</a>
+</nav>
 
-<section class="card">
-  <h2>📝 Homework & Assignment Tracker</h2>
-
-  <input type="hidden" id="hwEditId">
-
-  <label>Subject</label>
-  <input id="hwSubject" placeholder="Mathematics">
-
-  <label>Homework description</label>
-  <textarea id="hwDescription" placeholder="What homework do you need to complete?"></textarea>
-
-  <label>Due date</label>
-  <input id="hwDate" type="date">
-
-  <label>Priority</label>
-  <select id="hwPriority">
-    <option>Normal</option>
-    <option>High</option>
-    <option>Urgent</option>
-  </select>
-
-  <button id="hwSave">Save Homework</button>
-  <button class="secondary" id="hwCancel">Cancel</button>
-
-  <h3>My Assignments</h3>
-  <div id="hwList"></div>
+<section class="card" id="timetable">
+<h2>📅 My Smart Timetable</h2><p class="muted">You control your schedule. Add, edit and delete sessions whenever you want.</p>
+<label>Choose day</label><select id="day"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select>
+<div id="schedule"></div><h3>Add or edit a session</h3><input type="hidden" id="editId">
+<label>Subject or activity</label><input id="subject" placeholder="Mathematics">
+<div class="grid"><div><label>Start time</label><input id="start" type="time" value="16:00"></div><div><label>End time</label><input id="end" type="time" value="17:00"></div></div>
+<button id="saveSession">Save session</button><button class="secondary" id="cancelEdit">Cancel edit</button>
+<hr><h3>✨ Automatic study planner</h3><p class="muted">Suggests sessions in free time without overlapping existing sessions.</p>
+<label>Subjects (separate with commas)</label><input id="subjects" placeholder="Maths, Science, English">
+<div class="grid"><div><label>Free time starts</label><input id="autoStart" type="time" value="17:00"></div><div><label>Free time ends</label><input id="autoEnd" type="time" value="20:00"></div></div>
+<label>Length of each session</label><select id="sessionLength"><option value="25">25 minutes</option><option value="30" selected>30 minutes</option><option value="45">45 minutes</option><option value="60">60 minutes</option></select>
+<button id="autoPlan">Suggest study sessions</button><p class="muted" id="autoStatus" aria-live="polite"></p>
 </section>
 
-<section class="card">
-<h2>📅 My Smart Timetable</h2>
-<p class="muted">You control your schedule. Add, edit and delete your sessions whenever you want.</p>
+<section class="card" id="homework"><h2>📝 Homework & Assignment Tracker</h2><input type="hidden" id="hwEditId">
+<label>Subject</label><input id="hwSubject" placeholder="Mathematics"><label>Description</label><textarea id="hwDescription" placeholder="What do you need to complete?"></textarea>
+<label>Due date</label><input id="hwDate" type="date"><label>Priority</label><select id="hwPriority"><option>Normal</option><option>High</option><option>Urgent</option></select>
+<button id="hwSave">Save homework</button><button class="secondary" id="hwCancel">Cancel</button><div id="hwList"></div></section>
 
-<label for="day">Choose day</label>
-<select id="day">
-<option>Monday</option><option>Tuesday</option>
-<option>Wednesday</option><option>Thursday</option>
-<option>Friday</option><option>Saturday</option><option>Sunday</option>
-</select>
+<section class="card" id="calendar"><h2>🗓️ Study Calendar</h2><div class="grid"><div><label>Month</label><input id="calMonth" type="month"></div><div><label>Selected date</label><input id="calDate" type="date"></div></div><div class="calendar" id="calendarGrid"></div><p class="muted" id="calendarInfo">Choose a date to see its tasks and exams.</p></section>
 
-<div id="schedule"></div>
+<section class="card" id="exams"><h2>📝 Exam Planner</h2><label>Exam / test name</label><input id="examName" placeholder="Science final exam"><label>Subject</label><input id="examSubject" placeholder="Science"><label>Exam date</label><input id="examDate" type="date"><label>Notes</label><textarea id="examNotes" placeholder="Topics, chapters, room..."></textarea><button id="examSave">Add exam</button><div id="examList"></div></section>
 
-<h3>Add or edit a session</h3>
-<input type="hidden" id="editId">
-<label for="subject">Subject or activity</label>
-<input id="subject" placeholder="Example: Mathematics">
+<section class="card" id="revision"><h2>📖 Revision Planner</h2><label>Topic to revise</label><input id="revTopic" placeholder="Algebra chapter 3"><label>Subject</label><input id="revSubject" placeholder="Mathematics"><div class="grid"><div><label>Revision date</label><input id="revDate" type="date"></div><div><label>Duration (minutes)</label><input id="revDuration" type="number" min="5" value="30"></div></div><button id="revSave">Add revision</button><div id="revisionList"></div></section>
 
-<div class="grid">
-<div>
-<label for="start">Start time</label>
-<input id="start" type="time" value="16:00">
-</div>
-<div>
-<label for="end">End time</label>
-<input id="end" type="time" value="17:00">
-</div>
-</div>
-<button id="saveSession">Save session</button>
-<button class="secondary" id="cancelEdit">Cancel edit</button>
+<section class="card" id="grades"><h2>🏆 Grade Tracker</h2><label>Assessment</label><input id="gradeName" placeholder="Unit test"><label>Subject</label><input id="gradeSubject" placeholder="Mathematics"><div class="grid"><div><label>Marks earned</label><input id="gradeEarned" type="number" min="0" step="any"></div><div><label>Total marks</label><input id="gradeTotal" type="number" min="0.01" step="any"></div></div><button id="gradeSave">Add result</button><div id="gradeList"></div><p id="gradeAverage" class="muted"></p></section>
 
-<hr style="border:0;border-top:1px solid var(--line);margin:20px 0">
+<section class="card"><h2>⏱️ Focus & Break Timer</h2><div class="grid"><div><label>Study minutes</label><select id="studyMins"><option>25</option><option selected>30</option><option>45</option><option>50</option></select></div><div><label>Break minutes</label><select id="breakMins"><option>5</option><option>10</option><option>15</option></select></div></div><div class="timer"><div class="muted" id="phase">Ready to focus?</div><div class="clock" id="clock">30:00</div><p class="muted" id="timerHint">Choose Start when ready.</p><div class="actions"><button id="startTimer">Start</button><button class="secondary" id="pauseTimer">Pause</button><button class="secondary" id="resetTimer">Reset</button></div></div></section>
 
-<h3>🤖 Automatic study planner</h3>
-<p class="muted">Choose your free-time window and subjects. The planner will suggest sessions without overlapping your existing timetable.</p>
+<section class="card" id="stats"><h2>📊 Study Statistics</h2><div class="grid"><div class="stat"><b id="statSessions">0</b><span class="muted">Timetable sessions</span></div><div class="stat"><b id="statHomework">0</b><span class="muted">Homework completed</span></div><div class="stat"><b id="statExams">0</b><span class="muted">Upcoming exams</span></div><div class="stat"><b id="statRevision">0</b><span class="muted">Revision tasks done</span></div></div><p class="muted">Statistics are calculated from the information saved in this browser.</p></section>
 
-<label for="subjects">Subjects (separate with commas)</label>
-<input id="subjects" placeholder="Maths, Science, English">
-
-<div class="grid">
-<div>
-<label for="autoStart">Free time starts</label>
-<input id="autoStart" type="time" value="17:00">
-</div>
-<div>
-<label for="autoEnd">Free time ends</label>
-<input id="autoEnd" type="time" value="20:00">
-</div>
-</div>
-
-<label for="sessionLength">Length of each session</label>
-<select id="sessionLength">
-<option value="25">25 minutes</option>
-<option value="30" selected>30 minutes</option>
-<option value="45">45 minutes</option>
-<option value="60">60 minutes</option>
-</select>
-
-<button id="autoPlan">✨ Suggest study sessions</button>
-<p class="muted" id="autoStatus" aria-live="polite"></p>
+<section class="card" id="more"><h2>🎯 Daily Activity Tracker</h2><label>Activity</label><input id="activityName" placeholder="Read 10 pages / practice piano"><label>Date</label><input id="activityDate" type="date"><button id="activitySave">Add activity</button><div id="activityList"></div>
+<hr><h2>🎯 Today's Goals</h2><label>Choose day</label><select id="goalDay"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select><div id="goals"></div><div class="progress"><div id="bar"></div></div><p class="muted" id="progressText">0 goals completed</p>
+<hr><h2>⏰ Wake-up Reminder</h2><label>Reminder time</label><input id="wake" type="time" value="04:00"><button id="saveWake">Save reminder</button><p class="muted" id="wakeStatus">Reminder preference is saved on this device.</p><p class="notice">For a dependable alarm when your phone is locked, also set an alarm in your phone's Clock app.</p>
+<hr><h2>🔔 Notifications</h2><button id="notifyButton">Enable browser notifications</button><p class="muted" id="notifyStatus">Notifications work only when this browser supports and permits them.</p>
+<hr><h2>🌙 Dark Mode</h2><button id="darkToggle" class="secondary">Toggle dark mode</button>
+<hr><h2>🤖 Study Assistant</h2><p class="muted">A simple offline study helper. It creates a suggested plan from your topic and available minutes; it is not a live AI service.</p><label>What do you need to study?</label><input id="aiTopic" placeholder="e.g. Photosynthesis"><label>Available minutes</label><input id="aiMinutes" type="number" min="10" value="45"><button id="aiPlan">Make my study plan</button><p id="aiAnswer" class="muted"></p>
+<hr><h2>🌟 Study Habits</h2><div class="check"><input type="checkbox" id="habit1"><label for="habit1">Keep my phone away while studying</label></div><div class="check"><input type="checkbox" id="habit2"><label for="habit2">Drink water and take proper breaks</label></div><div class="check"><input type="checkbox" id="habit3"><label for="habit3">Review what I learned today</label></div>
 </section>
-
-<section class="card">
-<h2>⏱️ Focus and break timer</h2>
-<div class="grid">
-<div>
-<label for="studyMins">Study minutes</label>
-<select id="studyMins">
-<option>25</option><option selected>30</option>
-<option>45</option><option>50</option>
-</select>
-</div>
-<div>
-<label for="breakMins">Break minutes</label>
-<select id="breakMins">
-<option>5</option><option>10</option><option>15</option>
-</select>
-</div>
-</div>
-<div class="timer">
-<div class="muted" id="phase">Ready to focus?</div>
-<div class="clock" id="clock">30:00</div>
-<p class="muted" id="timerHint">Choose Start when ready.</p>
-<div class="actions">
-<button id="startTimer">Start</button>
-<button class="secondary" id="pauseTimer">Pause</button>
-<button class="secondary" id="resetTimer">Reset</button>
-</div>
-</div>
-</section>
-
-<section class="card">
-<h2>🎯 Today's goals</h2>
-<label for="goalDay">Choose day</label>
-<select id="goalDay">
-<option>Monday</option><option>Tuesday</option>
-<option>Wednesday</option><option>Thursday</option>
-<option>Friday</option><option>Saturday</option><option>Sunday</option>
-</select>
-<div id="goals"></div>
-<div class="progress"><div id="bar"></div></div>
-<p class="muted" id="progressText">0 goals completed</p>
-</section>
-
-<section class="card">
-<h2>⏰ Wake-up reminder</h2>
-<label for="wake">Reminder time</label>
-<input id="wake" type="time" value="04:00">
-<button id="saveWake">Save reminder</button>
-<p class="muted" id="wakeStatus">Reminder preference is saved on this device.</p>
-<p class="notice">For a dependable alarm when your phone is locked, also set an alarm in your phone's Clock app.</p>
-</section>
-
-<section class="card">
-<h2>🌟 Study habits</h2>
-<div class="check"><input type="checkbox" id="habit1">
-<label for="habit1">Keep my phone away while studying</label></div>
-<div class="check"><input type="checkbox" id="habit2">
-<label for="habit2">Drink water and take proper breaks</label></div>
-<div class="check"><input type="checkbox" id="habit3">
-<label for="habit3">Review what I learned today</label></div>
-</section>
-
-<p class="muted" style="text-align:center">
-Study Master · Your data is saved in this browser on this device.
-</p>
+<p class="muted" style="text-align:center">Study Master · Your data is saved in this browser on this device.</p>
+<p class="notice"><b>Important:</b> Cloud sync, family sharing, and installable home-screen widgets need a secure online backend or platform-specific setup. This single-file version does not pretend those are enabled. Back up your browser data before clearing site storage.</p>
 </main>
-
 <script>
-const days=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-const $=id=>document.getElementById(id);
-const read=(key,fallback)=>{
- try{return JSON.parse(localStorage.getItem(key))??fallback}
- catch{return fallback}
-};
+"use strict";
+const days=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],$=id=>document.getElementById(id);
+const read=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}};
 const write=(key,value)=>localStorage.setItem(key,JSON.stringify(value));
+const todayISO=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`};
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let sessions=read("smSessions",[]),homework=read("smHomework",[]),exams=read("smExams",[]),revisions=read("smRevisions",[]),grades=read("smGrades",[]),activities=read("smActivities",[]);
+let nextId=Math.max(0,...sessions.map(x=>Number(x.id)||0))+1;
+function mins(t){const [h,m]=t.split(":").map(Number);return h*60+m}
+function renderSchedule(){const box=$("schedule");box.replaceChildren();const list=sessions.filter(s=>s.day===$("day").value).sort((a,b)=>a.start.localeCompare(b.start));if(!list.length){box.textContent="No sessions yet. Add your first session below.";return}list.forEach(s=>{const row=document.createElement("div");row.className="session";const info=document.createElement("div");info.innerHTML=`<strong>${esc(s.subject)}</strong><small>${esc(s.start)} – ${esc(s.end)} · ${s.automatic?"Suggested":"Fixed"}</small>`;const actions=document.createElement("div");const edit=document.createElement("button");edit.className="secondary";edit.textContent="Edit";edit.onclick=()=>{$("editId").value=s.id;$("subject").value=s.subject;$("start").value=s.start;$("end").value=s.end};const del=document.createElement("button");del.className="danger";del.textContent="Delete";del.onclick=()=>{if(confirm("Delete this session?")){sessions=sessions.filter(x=>x.id!==s.id);write("smSessions",sessions);renderSchedule();renderStats()}};actions.append(edit,del);row.append(info,actions);box.append(row)})}
+function overlaps(day,start,end,id){return sessions.some(s=>s.day===day&&s.id!==id&&mins(start)<mins(s.end)&&mins(end)>mins(s.start))}
+$("saveSession").onclick=()=>{let day=$("day").value,subject=$("subject").value.trim(),start=$("start").value,end=$("end").value,id=$("editId").value?Number($("editId").value):null;if(!subject||!start||!end)return alert("Enter a subject and both times.");if(mins(end)<=mins(start))return alert("End time must be after start time.");if(overlaps(day,start,end,id))return alert("This time overlaps another session.");if(id){let s=sessions.find(x=>x.id===id);if(s)Object.assign(s,{day,subject,start,end,automatic:false})}else sessions.push({id:nextId++,day,subject,start,end,automatic:false});write("smSessions",sessions);$("editId").value="";$("subject").value="";renderSchedule();renderStats()};
+$("cancelEdit").onclick=()=>{$("editId").value="";$("subject").value="";$("start").value="16:00";$("end").value="17:00"};$("day").onchange=renderSchedule;
+$("autoPlan").onclick=()=>{const subs=$("subjects").value.split(",").map(x=>x.trim()).filter(Boolean),day=$("day").value,start=$("autoStart").value,end=$("autoEnd").value,len=Number($("sessionLength").value);if(!subs.length)return $("autoStatus").textContent="Enter at least one subject.";if(!start||!end||mins(end)<=mins(start))return $("autoStatus").textContent="Choose a valid free-time window.";let cursor=mins(start),finish=mins(end),added=0,busy=sessions.filter(s=>s.day===day).map(s=>({start:mins(s.start),end:mins(s.end)})).sort((a,b)=>a.start-b.start),i=0;while(cursor+len<=finish){let conflict=busy.find(b=>cursor<b.end&&cursor+len>b.start);if(conflict){cursor=conflict.end;continue}let fmt=n=>String(n).padStart(2,"0"),e=cursor+len;sessions.push({id:nextId++,day,subject:subs[i%subs.length],start:`${fmt(Math.floor(cursor/60))}:${fmt(cursor%60)}`,end:`${fmt(Math.floor(e/60))}:${fmt(e%60)}`,automatic:true});busy.push({start:cursor,end:e});busy.sort((a,b)=>a.start-b.start);cursor=e+5;i++;added++}write("smSessions",sessions);renderSchedule();renderStats();$("autoStatus").textContent=added?`${added} suggested sessions added. You can edit or delete them.`:"No free slots fit your selected session length."};
 
-let sessions=read("smSessions",[]);
-let nextId=1;
-sessions.forEach(s=>nextId=Math.max(nextId,Number(s.id)+1));
+function renderHomework(){const box=$("hwList");box.replaceChildren();homework.forEach(t=>{const row=document.createElement("div");row.className="item";const info=document.createElement("div");info.innerHTML=`<strong>${esc(t.subject)}</strong><small>${esc(t.description)} · Due ${esc(t.date)} · ${esc(t.priority)} · ${t.done?"Completed":"Pending"}</small>`;const actions=document.createElement("div");const done=document.createElement("button");done.className="secondary";done.textContent=t.done?"Undo":"Complete";done.onclick=()=>{t.done=!t.done;saveHomework()};const edit=document.createElement("button");edit.className="secondary";edit.textContent="Edit";edit.onclick=()=>{$("hwEditId").value=t.id;$("hwSubject").value=t.subject;$("hwDescription").value=t.description;$("hwDate").value=t.date;$("hwPriority").value=t.priority};const del=document.createElement("button");del.className="danger";del.textContent="Delete";del.onclick=()=>{if(confirm("Delete this homework?")){homework=homework.filter(x=>x.id!==t.id);saveHomework()}};actions.append(done,edit,del);row.append(info,actions);box.append(row)});if(!homework.length)box.textContent="No homework added yet."}
+function saveHomework(){write("smHomework",homework);renderHomework();renderStats();renderCalendar()}
+$("hwSave").onclick=()=>{let subject=$("hwSubject").value.trim(),description=$("hwDescription").value.trim(),date=$("hwDate").value,priority=$("hwPriority").value,id=$("hwEditId").value;if(!subject||!description||!date)return alert("Fill in the subject, description and due date.");if(id){let t=homework.find(x=>x.id===Number(id));if(t)Object.assign(t,{subject,description,date,priority})}else homework.push({id:Date.now(),subject,description,date,priority,done:false});$("hwCancel").click();saveHomework()};
+$("hwCancel").onclick=()=>{["hwEditId","hwSubject","hwDescription","hwDate"].forEach(id=>$(id).value="");$("hwPriority").value="Normal"};
 
-function minutes(t){
- const [h,m]=t.split(":").map(Number);
- return h*60+m;
-}
-function timeText(t){
- const [h,m]=t.split(":").map(Number);
- return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
-}
-function renderSchedule(){
- const day=$("day").value;
- const box=$("schedule");
- box.replaceChildren();
- const list=sessions.filter(s=>s.day===day)
- .sort((a,b)=>a.start.localeCompare(b.start));
+function renderExams(){const box=$("examList");box.replaceChildren();exams.sort((a,b)=>a.date.localeCompare(b.date)).forEach(e=>{let row=document.createElement("div");row.className="item";row.innerHTML=`<div><strong>${esc(e.name)} — ${esc(e.subject)}</strong><small>${esc(e.date)} · ${esc(e.notes||"No notes")}</small></div>`;let d=document.createElement("button");d.className="danger";d.textContent="Delete";d.onclick=()=>{exams=exams.filter(x=>x.id!==e.id);write("smExams",exams);renderExams();renderCalendar();renderStats()};row.append(d);box.append(row)});if(!exams.length)box.textContent="No exams added yet."}
+$("examSave").onclick=()=>{let name=$("examName").value.trim(),subject=$("examSubject").value.trim(),date=$("examDate").value,notes=$("examNotes").value.trim();if(!name||!subject||!date)return alert("Enter exam name, subject and date.");exams.push({id:Date.now(),name,subject,date,notes});write("smExams",exams);["examName","examSubject","examDate","examNotes"].forEach(id=>$(id).value="");renderExams();renderCalendar();renderStats()};
 
- if(!list.length){
-  const p=document.createElement("p");
-  p.className="muted";p.textContent="No sessions yet. Add your first study session below.";
-  box.append(p);return;
- }
- list.forEach(s=>{
-  const row=document.createElement("div");
-  row.className="session";
-  const info=document.createElement("div");
-  const name=document.createElement("strong");
-  name.textContent=s.subject;
-  const time=document.createElement("small");
-  time.textContent=`${s.start} – ${s.end}${s.automatic?" · Suggested": " · Fixed"}`;
-  info.append(name,time);
-  const actions=document.createElement("div");
-  const edit=document.createElement("button");
-  edit.className="secondary";edit.textContent="Edit";
-  edit.onclick=()=>editSession(s.id);
-  const del=document.createElement("button");
-  del.className="danger";del.textContent="Delete";
-  del.onclick=()=>deleteSession(s.id);
-  actions.append(edit,del);row.append(info,actions);box.append(row);
- });
-}
-function overlaps(day,start,end,ignoreId){
- return sessions.some(s=>s.day===day&&s.id!==ignoreId&&
- minutes(start)<minutes(s.end)&&minutes(end)>minutes(s.start));
-}
-function clearForm(){
- $("editId").value="";
- $("subject").value="";
- $("start").value="16:00";
- $("end").value="17:00";
-}
-function editSession(id){
- const s=sessions.find(x=>x.id===id);if(!s)return;
- $("editId").value=s.id;
- $("subject").value=s.subject;
- $("start").value=s.start;
- $("end").value=s.end;
- window.scrollTo({top:0,behavior:"smooth"});
-}
-function deleteSession(id){
- if(!confirm("Delete this study session?"))return;
- sessions=sessions.filter(s=>s.id!==id);
- write("smSessions",sessions);renderSchedule();
-}
-$("saveSession").onclick=()=>{
- const day=$("day").value;
- const subject=$("subject").value.trim();
- const start=$("start").value,end=$("end").value;
- const id=$("editId").value?Number($("editId").value):null;
- if(!subject||!start||!end){alert("Enter a subject and both times.");return}
- if(minutes(end)<=minutes(start)){alert("End time must be after start time.");return}
- if(overlaps(day,start,end,id)){alert("This time overlaps another session. Choose a different time.");return}
- if(id){
-  const s=sessions.find(x=>x.id===id);
-  if(s)Object.assign(s,{day,subject,start,end,automatic:false});
- }else{
-  sessions.push({id:nextId++,day,subject,start,end,automatic:false});
- }
- write("smSessions",sessions);clearForm();renderSchedule();
-};
-$("cancelEdit").onclick=clearForm;
-$("day").onchange=renderSchedule;
+function renderRevisions(){const box=$("revisionList");box.replaceChildren();revisions.sort((a,b)=>a.date.localeCompare(b.date)).forEach(r=>{let row=document.createElement("div");row.className="item";row.innerHTML=`<div><strong>${esc(r.topic)} — ${esc(r.subject)}</strong><small>${esc(r.date)} · ${r.duration} min · ${r.done?"Completed":"Planned"}</small></div>`;let actions=document.createElement("div"),done=document.createElement("button");done.className="secondary";done.textContent=r.done?"Undo":"Complete";done.onclick=()=>{r.done=!r.done;write("smRevisions",revisions);renderRevisions();renderStats()};let del=document.createElement("button");del.className="danger";del.textContent="Delete";del.onclick=()=>{revisions=revisions.filter(x=>x.id!==r.id);write("smRevisions",revisions);renderRevisions();renderStats()};actions.append(done,del);row.append(actions);box.append(row)});if(!revisions.length)box.textContent="No revision tasks yet."}
+$("revSave").onclick=()=>{let topic=$("revTopic").value.trim(),subject=$("revSubject").value.trim(),date=$("revDate").value,duration=Number($("revDuration").value);if(!topic||!subject||!date||duration<5)return alert("Enter topic, subject, date and a duration of at least 5 minutes.");revisions.push({id:Date.now(),topic,subject,date,duration,done:false});write("smRevisions",revisions);["revTopic","revSubject","revDate"].forEach(id=>$(id).value="");renderRevisions();renderCalendar();renderStats()};
 
-$("autoPlan").onclick=()=>{
- const day=$("day").value;
- const subjects=$("subjects").value.split(",").map(x=>x.trim()).filter(Boolean);
- const start=$("autoStart").value,end=$("autoEnd").value;
- const length=Number($("sessionLength").value);
- if(!subjects.length){$("autoStatus").textContent="Enter at least one subject.";return}
- if(!start||!end||minutes(end)<=minutes(start)){
-  $("autoStatus").textContent="Choose a valid free-time window.";return;
- }
- let cursor=minutes(start),finish=minutes(end),added=0;
- const busy=sessions.filter(s=>s.day===day)
- .map(s=>({start:minutes(s.start),end:minutes(s.end)}))
- .sort((a,b)=>a.start-b.start);
- let subjectIndex=0;
- while(cursor+length<=finish){
-  const conflict=busy.find(b=>cursor<b.end&&cursor+length>b.start);
-  if(conflict){cursor=conflict.end;continue}
-  const hh=Math.floor(cursor/60),mm=cursor%60;
-  const endMin=cursor+length;
-  const eh=Math.floor(endMin/60),em=endMin%60;
-  const fmt=n=>String(n).padStart(2,"0");
-  sessions.push({
-   id:nextId++,day,subject:subjects[subjectIndex%subjects.length],
-   start:`${fmt(hh)}:${fmt(mm)}`,
-   end:`${fmt(eh)}:${fmt(em)}`,
-   automatic:true
-  });
-  busy.push({start:cursor,end:endMin});
-  busy.sort((a,b)=>a.start-b.start);
-  subjectIndex++;added++;cursor=endMin+5;
- }
- write("smSessions",sessions);renderSchedule();
- $("autoStatus").textContent=added?
- `${added} suggested sessions added. You can edit or delete any of them.`:
- "No free slots fit your selected session length.";
-};
+function renderGrades(){const box=$("gradeList");box.replaceChildren();let total=0,max=0;grades.forEach(g=>{total+=g.earned;max+=g.total;let row=document.createElement("div");row.className="item";row.innerHTML=`<div><strong>${esc(g.name)} — ${esc(g.subject)}</strong><small>${g.earned} / ${g.total} (${(g.earned/g.total*100).toFixed(1)}%)</small></div>`;let d=document.createElement("button");d.className="danger";d.textContent="Delete";d.onclick=()=>{grades=grades.filter(x=>x.id!==g.id);write("smGrades",grades);renderGrades();renderStats()};row.append(d);box.append(row)});$("gradeAverage").textContent=max?`Overall: ${total} / ${max} = ${(100*total/max).toFixed(1)}%`:"No grades entered yet."}
+$("gradeSave").onclick=()=>{let name=$("gradeName").value.trim(),subject=$("gradeSubject").value.trim(),earned=Number($("gradeEarned").value),total=Number($("gradeTotal").value);if(!name||!subject||!Number.isFinite(earned)||!Number.isFinite(total)||total<=0||earned<0||earned>total)return alert("Enter valid marks. Earned marks must be between 0 and total marks.");grades.push({id:Date.now(),name,subject,earned,total});write("smGrades",grades);["gradeName","gradeSubject","gradeEarned","gradeTotal"].forEach(id=>$(id).value="");renderGrades();renderStats()};
+function renderStats(){$("statSessions").textContent=sessions.length;$("statHomework").textContent=homework.filter(x=>x.done).length;$("statExams").textContent=exams.filter(x=>x.date>=todayISO()).length;$("statRevision").textContent=revisions.filter(x=>x.done).length}
 
-let homework = read("smHomework", []);
+function renderCalendar(){let month=$("calMonth").value||todayISO().slice(0,7),[y,m]=month.split("-").map(Number),first=new Date(y,m-1,1),offset=(first.getDay()+6)%7,count=new Date(y,m,0).getDate(),grid=$("calendarGrid");grid.replaceChildren();["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].forEach(x=>{let e=document.createElement("div");e.className="muted";e.textContent=x;e.style.textAlign="center";grid.append(e)});for(let i=0;i<offset;i++)grid.append(document.createElement("div"));let eventDates=new Set([...homework.map(x=>x.date),...exams.map(x=>x.date),...revisions.map(x=>x.date)]);for(let d=1;d<=count;d++){let date=`${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`,e=document.createElement("button");e.className="calday"+(date===todayISO()?" today":"")+(eventDates.has(date)?" has":"");e.textContent=d;e.onclick=()=>{$("calDate").value=date;showCalendarDate()};grid.append(e)}if(!$("calDate").value)$("calDate").value=todayISO();showCalendarDate()}
+function showCalendarDate(){let date=$("calDate").value;if(!date)return;let items=[...homework.filter(x=>x.date===date).map(x=>"Homework: "+x.subject),...exams.filter(x=>x.date===date).map(x=>"Exam: "+x.name),...revisions.filter(x=>x.date===date).map(x=>"Revision: "+x.topic)];$("calendarInfo").textContent=items.length?`${date}: ${items.join(" · ")}`:`${date}: No homework, exams or revision tasks.`}
+$("calMonth").value=todayISO().slice(0,7);$("calDate").value=todayISO();$("calMonth").onchange=renderCalendar;$("calDate").onchange=showCalendarDate;
 
-function renderHomework() {
-  const box = $("hwList");
-  box.replaceChildren();
+function renderActivities(){let box=$("activityList");box.replaceChildren();activities.forEach(a=>{let row=document.createElement("div");row.className="item";row.innerHTML=`<div><strong>${esc(a.name)}</strong><small>${esc(a.date)}</small></div>`;let d=document.createElement("button");d.className="danger";d.textContent="Delete";d.onclick=()=>{activities=activities.filter(x=>x.id!==a.id);write("smActivities",activities);renderActivities()};row.append(d);box.append(row)});if(!activities.length)box.textContent="No activities yet."}
+$("activityDate").value=todayISO();$("activitySave").onclick=()=>{let name=$("activityName").value.trim(),date=$("activityDate").value;if(!name||!date)return alert("Enter an activity and date.");activities.push({id:Date.now(),name,date});write("smActivities",activities);$("activityName").value="";renderActivities()};
 
-  if (!homework.length) {
-    box.textContent = "No homework added yet.";
-    return;
-  }
+const goalNames=["Complete my study session","Finish homework or practice questions","Revise today's key points","Prepare for the next class"];
+function goalKey(){return "smGoals-"+todayISO()+"-"+$("goalDay").value}
+function renderGoals(){let saved=read(goalKey(),[]),box=$("goals");box.replaceChildren();goalNames.forEach((name,i)=>{let label=document.createElement("label");label.className="check";let input=document.createElement("input");input.type="checkbox";input.checked=!!saved[i];input.onchange=()=>{saved[i]=input.checked;write(goalKey(),saved);updateGoals(saved)};label.append(input,document.createTextNode(name));box.append(label)});updateGoals(saved)}
+function updateGoals(a){let n=a.filter(Boolean).length;$("bar").style.width=(n/goalNames.length*100)+"%";$("progressText").textContent=`${n} of ${goalNames.length} goals completed`}
+$("goalDay").value=days[(new Date().getDay()+6)%7];$("goalDay").onchange=renderGoals;
 
-  homework.forEach(task => {
-    const item = document.createElement("div");
-    item.className = "session";
-
-    const info = document.createElement("div");
-    const title = document.createElement("strong");
-    title.textContent = task.subject;
-
-    const details = document.createElement("small");
-    details.textContent =
-      task.description + " | Due: " + task.date +
-      " | " + task.priority;
-
-    const status = document.createElement("small");
-    status.textContent = task.done ? "Completed ✅" : "Pending";
-
-    info.append(title, details, status);
-
-    const actions = document.createElement("div");
-
-    const done = document.createElement("button");
-    done.className = "secondary";
-    done.textContent = task.done ? "Undo" : "Complete";
-
-    done.onclick = () => {
-      task.done = !task.done;
-      saveHomework();
-    };
-
-    const edit = document.createElement("button");
-    edit.className = "secondary";
-    edit.textContent = "Edit";
-
-    edit.onclick = () => {
-      $("hwEditId").value = task.id;
-      $("hwSubject").value = task.subject;
-      $("hwDescription").value = task.description;
-      $("hwDate").value = task.date;
-      $("hwPriority").value = task.priority;
-    };
-
-    const del = document.createElement("button");
-    del.className = "danger";
-    del.textContent = "Delete";
-
-    del.onclick = () => {
-      if (confirm("Delete this homework?")) {
-        homework = homework.filter(x => x.id !== task.id);
-        saveHomework();
-      }
-    };
-
-    actions.append(done, edit, del);
-    item.append(info, actions);
-    box.append(item);
-  });
-}
-
-function saveHomework() {
-  write("smHomework", homework);
-  renderHomework();
-}
-
-$("hwSave").onclick = () => {
-  const subject = $("hwSubject").value.trim();
-  const description = $("hwDescription").value.trim();
-  const date = $("hwDate").value;
-  const priority = $("hwPriority").value;
-  const editId = $("hwEditId").value;
-
-  if (!subject || !description || !date) {
-    alert("Please fill in all homework details.");
-    return;
-  }
-
-  if (editId) {
-    const task = homework.find(x => x.id === Number(editId));
-
-    if (task) {
-      Object.assign(task, {
-        subject, description, date, priority
-      });
-    }
-  } else {
-    homework.push({
-      id: Date.now(),
-      subject,
-      description,
-      date,
-      priority,
-      done: false
-    });
-  }
-
-  $("hwEditId").value = "";
-  $("hwSubject").value = "";
-  $("hwDescription").value = "";
-  $("hwDate").value = "";
-  $("hwPriority").value = "Normal";
-
-  saveHomework();
-};
-
-$("hwCancel").onclick = () => {
-  $("hwEditId").value = "";
-  $("hwSubject").value = "";
-  $("hwDescription").value = "";
-  $("hwDate").value = "";
-  $("hwPriority").value = "Normal";
-};
-
-renderHomework();
-
-const goalNames=[
- "Complete my study session",
- "Finish homework or practice questions",
- "Revise today's key points",
- "Prepare for the next class"
-];
-function goalKey(){
- return "smGoals-"+new Date().toDateString()+"-"+$("goalDay").value;
-}
-function renderGoals(){
- const saved=read(goalKey(),[]);
- const box=$("goals");box.replaceChildren();
- goalNames.forEach((name,i)=>{
-  const label=document.createElement("label");
-  label.className="check";
-  const input=document.createElement("input");
-  input.type="checkbox";input.checked=!!saved[i];
-  input.onchange=()=>{
-   saved[i]=input.checked;write(goalKey(),saved);updateGoals(saved);
-  };
-  label.append(input,document.createTextNode(name));box.append(label);
- });
- updateGoals(saved);
-}
-function updateGoals(saved){
- const count=saved.filter(Boolean).length;
- $("bar").style.width=(count/goalNames.length*100)+"%";
- $("progressText").textContent=`${count} of ${goalNames.length} goals completed`;
-}
-$("goalDay").onchange=renderGoals;
-const weekday=days[(new Date().getDay()+6)%7];
-$("day").value=weekday;$("goalDay").value=weekday;
-renderSchedule();renderGoals();
-
-let remaining=Number($("studyMins").value)*60;
-let mode="study",running=false,interval=null;
-function duration(){
- return Number($(mode==="study"?"studyMins":"breakMins").value)*60;
-}
-function format(seconds){
- return String(Math.floor(seconds/60)).padStart(2,"0")+":"+
- String(seconds%60).padStart(2,"0");
-}
-function renderTimer(){
- $("clock").textContent=format(remaining);
- $("phase").textContent=mode==="study"?"📖 Study time":"☕ Break time";
- $("timerHint").textContent=running?"Timer is running.":"Paused or ready.";
-}
-function stopTimer(){
- clearInterval(interval);interval=null;running=false;
-}
-function tick(){
- remaining--;
- if(remaining<=0){
-  stopTimer();
-  if(mode==="study"){mode="break";remaining=duration()}
-  else{mode="study";remaining=duration()}
-  renderTimer();
-  $("timerHint").textContent="Session finished! Start the next timer when ready.";
-  if("Notification"in window&&Notification.permission==="granted"){
-   new Notification(mode==="break"?"Break time":"Study time");
-  }
-  try{navigator.vibrate?.([200,100,200])}catch(e){}
-  return;
- }
- renderTimer();
-}
-$("startTimer").onclick=()=>{
- if(running)return;
- if(remaining<=0)remaining=duration();
- if("Notification"in window&&Notification.permission==="default")
-  Notification.requestPermission();
- running=true;interval=setInterval(tick,1000);renderTimer();
-};
-$("pauseTimer").onclick=()=>{stopTimer();renderTimer()};
-$("resetTimer").onclick=()=>{
- stopTimer();mode="study";remaining=duration();renderTimer();
-};
-["studyMins","breakMins"].forEach(id=>{
- $(id).onchange=()=>{
-  if(!running){mode="study";remaining=duration();renderTimer()}
- };
-});
-renderTimer();
-
-$("saveWake").onclick=()=>{
- const t=$("wake").value;
- localStorage.setItem("wakeReminder",t);
- $("wakeStatus").textContent=`Reminder preference saved as ${t}. Set a phone alarm too.`;
-};
-if(localStorage.getItem("wakeReminder"))
- $("wake").value=localStorage.getItem("wakeReminder");
-
-["habit1","habit2","habit3"].forEach(id=>{
- $(id).checked=localStorage.getItem("sm-"+id)==="true";
- $(id).onchange=()=>localStorage.setItem("sm-"+id,$(id).checked);
-});
-
-if("serviceWorker"in navigator&&location.protocol.startsWith("http")){
- navigator.serviceWorker.register("./sw.js").catch(()=>{});
-}
+let remaining=Number($("studyMins").value)*60,mode="study",running=false,interval=null;
+function duration(){return Number($(mode==="study"?"studyMins":"breakMins").value)*60}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+function renderTimer(){$("clock").textContent=fmt(remaining);$("phase").textContent=mode==="study"?"📖 Study time":"☕ Break time";$("timerHint").textContent=running?"Timer is running.":"Paused or ready."}
+function stopTimer(){clearInterval(interval);interval=null;running=false}
+function tick(){remaining--;if(remaining<=0){stopTimer();mode=mode==="study"?"break":"study";remaining=duration();renderTimer();$("timerHint").textContent="Session finished! Start the next timer when ready.";if("Notification"in window&&Notification.permission==="granted")new Notification(mode==="break"?"Break time":"Study time");try{navigator.vibrate?.([200,100,200])}catch(e){}return}renderTimer()}
+$("startTimer").onclick=()=>{if(running)return;if(remaining<=0)remaining=duration();if("Notification"in window&&Notification.permission==="default")Notification.requestPermission();running=true;interval=setInterval(tick,1000);renderTimer()};
+$("pauseTimer").onclick=()=>{stopTimer();renderTimer()};$("resetTimer").onclick=()=>{stopTimer();mode="study";remaining=duration();renderTimer()};
+["studyMins","breakMins"].forEach(id=>$(id).onchange=()=>{if(!running){mode="study";remaining=duration();renderTimer()}});
+$("saveWake").onclick=()=>{let t=$("wake").value;localStorage.setItem("wakeReminder",t);$("wakeStatus").textContent=`Reminder preference saved as ${t}. Set a phone alarm too.`};
+if(localStorage.getItem("wakeReminder"))$("wake").value=localStorage.getItem("wakeReminder");
+$("notifyButton").onclick=async()=>{if(!("Notification"in window))return $("notifyStatus").textContent="Notifications are not supported in this browser.";let p=await Notification.requestPermission();$("notifyStatus").textContent=`Notification permission: ${p}. Browser notifications may require the app to be open.`};
+$("darkToggle").onclick=()=>{document.body.classList.toggle("dark");localStorage.setItem("smDark",document.body.classList.contains("dark")?"true":"false")};if(localStorage.getItem("smDark")==="true")document.body.classList.add("dark");
+$("aiPlan").onclick=()=>{let topic=$("aiTopic").value.trim(),n=Number($("aiMinutes").value);if(!topic||n<10)return $("aiAnswer").textContent="Enter a topic and at least 10 minutes.";let a=Math.max(5,Math.round(n*.2)),b=Math.max(5,Math.round(n*.6)),c=Math.max(0,n-a-b);$("aiAnswer").textContent=`Suggested ${n}-minute plan for ${topic}: ${a} min — review what you already know; ${b} min — learn and write key points; ${c} min — practise questions and check your understanding.`};
+["habit1","habit2","habit3"].forEach(id=>{$(id).checked=localStorage.getItem("sm-"+id)==="true";$(id).onchange=()=>localStorage.setItem("sm-"+id,$(id).checked)});
+renderSchedule();renderHomework();renderExams();renderRevisions();renderGrades();renderStats();renderCalendar();renderActivities();renderGoals();renderTimer();
 </script>
 </body>
 </html>
