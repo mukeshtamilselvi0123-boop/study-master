@@ -1,0 +1,9 @@
+{
+  "name": "Study Master",
+  "short_name": "Study Master",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f2f7fc",
+  "theme_color": "#168fe0",
+  "description": "Offline-ready study planner and notes workspace"
+}
